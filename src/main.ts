@@ -15,13 +15,8 @@ form?.addEventListener('submit', (e) => {
         title: input.value,
     }
 
-    todoList.push(newTodo);
-
     addNewTodo(newTodo);
-    console.log(todoList);
 })
-
-const todoList: Todo[] = []
 
 type Todo = {
     id: string,
@@ -31,9 +26,22 @@ type Todo = {
 function addNewTodo(theTodo: Todo) {
     const newTodo = document.createElement('li');
     const todoLabel = document.createElement('label');
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete Todo';
     todoLabel.textContent = theTodo.title; 
     newTodo.append(todoLabel);
+    newTodo.appendChild(deleteButton);
     list?.append(newTodo);
+
+    deleteButton.addEventListener('click', (e) => {
+        deleteTodo(e);
+    })
+}
+
+function deleteTodo(e: Event) {
+    let targetTodo = e.target as HTMLButtonElement;
+    let todoParent = targetTodo.parentElement;
+    todoParent?.remove();
 }
 
 
