@@ -16,6 +16,7 @@ form?.addEventListener('submit', (e) => {
     }
 
     addNewTodo(newTodo);
+    input.value = '';
 })
 
 type Todo = {
@@ -26,22 +27,49 @@ type Todo = {
 function addNewTodo(theTodo: Todo) {
     const newTodo = document.createElement('li');
     const todoLabel = document.createElement('label');
-    const deleteButton = document.createElement('button');
-    deleteButton.textContent = 'Delete Todo';
     todoLabel.textContent = theTodo.title; 
     newTodo.append(todoLabel);
-    newTodo.appendChild(deleteButton);
     list?.append(newTodo);
-
-    deleteButton.addEventListener('click', (e) => {
-        deleteTodo(e);
-    })
+    renderTodoButtons(theTodo, newTodo);
 }
 
 function deleteTodo(e: Event) {
     let targetTodo = e.target as HTMLButtonElement;
     let todoParent = targetTodo.parentElement;
     todoParent?.remove();
+}
+
+function editTodo(theTodo: Todo, parent: HTMLLIElement, button: HTMLButtonElement) {
+    const editInput = document.createElement('input');
+    parent.appendChild(editInput);
+    editInput.value = theTodo.title;
+    const saveEditButton = document.createElement('button');
+    saveEditButton.textContent = 'Save';
+    parent.appendChild(saveEditButton);
+    button.remove();
+
+    saveEditButton.addEventListener('click', () => {
+        parent.textContent = editInput.value;
+        theTodo.title = editInput.value;
+        renderTodoButtons(theTodo, parent);
+    })
+}
+
+function renderTodoButtons(theTodo: Todo, parent: HTMLLIElement) {
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete Todo';
+    parent.appendChild(deleteButton);
+    const editButton = document.createElement('button');
+    editButton.textContent = 'Edit Todo'
+    parent.appendChild(editButton);
+
+    deleteButton.addEventListener('click', (e) => {
+        deleteTodo(e);
+    })
+
+    editButton.addEventListener('click', () => {
+        editTodo(theTodo, parent, editButton);
+    })
 }
 
 
